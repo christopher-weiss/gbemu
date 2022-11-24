@@ -36,3 +36,13 @@ type Cpu struct {
 	PC uint16
 	SP uint16
 }
+
+// HighByte returns the value of the first byte of combined register value e.g. Return the A value of the AF-register.
+func highByte(rVal uint16) uint8 {
+	return uint8(rVal >> 8)
+}
+
+// HighByte returns the value of the first byte of combined register value e.g. Return the F value of the AF-register.
+func lowByte(rVal uint16) uint8 {
+	return uint8(rVal & 0xff)
+}
