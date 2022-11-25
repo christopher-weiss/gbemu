@@ -37,6 +37,10 @@ type Cpu struct {
 	SP uint16
 }
 
+func init() {
+	initOpCodes()
+}
+
 // HighByte returns the value of the first byte of combined register value e.g. Return the A value of the AF-register.
 func highByte(rVal uint16) uint8 {
 	return uint8(rVal >> 8)
@@ -45,4 +49,26 @@ func highByte(rVal uint16) uint8 {
 // HighByte returns the value of the first byte of combined register value e.g. Return the F value of the AF-register.
 func lowByte(rVal uint16) uint8 {
 	return uint8(rVal & 0xff)
+}
+
+// Set the A-register to the given value.
+func (cpu *Cpu) setA(val uint8) {
+	cpu.AF = cpu.AF & ((uint16(val) << 8) | 0xff)
+}
+
+var opcodes map[uint8]func(*Cpu)
+
+// Initalize opcodes map
+func initOpCodes() {
+	opcodes = make(map[uint8]func(*Cpu))
+
+	//
+	// Load r1,r2
+	// Take value stored in r2 register and place it in r1
+	//
+
+	// Load A,A
+	opcodes[0x7f] = func(cpu *Cpu) {
+		cpu.setA(highByte(cpu.AF))
+	}
 }
