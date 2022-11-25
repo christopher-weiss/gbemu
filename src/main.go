@@ -39,12 +39,12 @@ func main() {
 	ebiten.SetWindowTitle("gbemu")
 
 	cpu := Cpu{
-		AF: 0x0000,
-		BC: 0x0000,
-		DE: 0x0000,
-		HL: 0x0000,
-		PC: 0x0000,
-		SP: 0x0000,
+		AF: 0x1c1f,
+		BC: 0x0001,
+		DE: 0xcfcf,
+		HL: 0x1234,
+		PC: 0xff01,
+		SP: 0xcc12,
 	}
 
 	if err := ebiten.RunGame(&Game{cpu: cpu}); err != nil {

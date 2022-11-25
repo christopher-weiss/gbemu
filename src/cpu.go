@@ -56,6 +56,16 @@ func (cpu *Cpu) setA(val uint8) {
 	cpu.AF = cpu.AF & ((uint16(val) << 8) | 0xff)
 }
 
+// Set the B-register to the given value.
+func (cpu *Cpu) setB(val uint8) {
+	cpu.BC = cpu.BC & ((uint16(val) << 8) | 0xff)
+}
+
+// Set the C-register to the given value.
+func (cpu *Cpu) setC(val uint8) {
+	cpu.BC = (cpu.BC & 0xff00) | uint16(val)
+}
+
 var opcodes map[uint8]func(*Cpu)
 
 // Initalize opcodes map
@@ -63,12 +73,123 @@ func initOpCodes() {
 	opcodes = make(map[uint8]func(*Cpu))
 
 	//
-	// Load r1,r2
+	// Load (LD) r1,r2
 	// Take value stored in r2 register and place it in r1
 	//
 
-	// Load A,A
+	// LD A,A
 	opcodes[0x7f] = func(cpu *Cpu) {
 		cpu.setA(highByte(cpu.AF))
+	}
+
+	// LD A,B
+	opcodes[0x78] = func(cpu *Cpu) {
+		cpu.setA(highByte(cpu.BC))
+	}
+
+	// LD A,C
+	opcodes[0x79] = func(cpu *Cpu) {
+		cpu.setA(lowByte(cpu.BC))
+	}
+
+	// LD A,D
+	opcodes[0x7a] = func(cpu *Cpu) {
+		cpu.setA(highByte(cpu.DE))
+	}
+
+	// LD A,E
+	opcodes[0x7b] = func(cpu *Cpu) {
+		cpu.setA(lowByte(cpu.DE))
+	}
+
+	// LD A,H
+	opcodes[0x7c] = func(cpu *Cpu) {
+		cpu.setA(highByte(cpu.HL))
+	}
+
+	// LD A,L
+	opcodes[0x7d] = func(cpu *Cpu) {
+		cpu.setA(lowByte(cpu.HL))
+	}
+
+	// LD A,(HL)
+	// Functionally identical to LD A,H (opcode 0x7c)
+	// however it takes 8 clock cycles to execute
+	opcodes[0x7e] = func(cpu *Cpu) {
+		cpu.setA(highByte(cpu.HL))
+	}
+
+	// LD B,B
+	opcodes[0x40] = func(cpu *Cpu) {
+		cpu.setB(highByte(cpu.BC))
+	}
+
+	// LD B,C
+	opcodes[0x41] = func(cpu *Cpu) {
+		cpu.setB(lowByte(cpu.BC))
+	}
+
+	// LD B,D
+	opcodes[0x42] = func(cpu *Cpu) {
+		cpu.setB(highByte(cpu.DE))
+	}
+
+	// LD B,E
+	opcodes[0x43] = func(cpu *Cpu) {
+		cpu.setB(lowByte(cpu.DE))
+	}
+
+	// LD B,H
+	opcodes[0x44] = func(cpu *Cpu) {
+		cpu.setB(highByte(cpu.HL))
+	}
+
+	// LD B,L
+	opcodes[0x45] = func(cpu *Cpu) {
+		cpu.setB(lowByte(cpu.HL))
+	}
+
+	// LD B,(HL)
+	// Functionally identical to LD B,H (opcode 0x44)
+	// however it takes 8 clock cycles to execute
+	opcodes[0x46] = func(cpu *Cpu) {
+		cpu.setB(highByte(cpu.HL))
+	}
+
+	// LD C,B
+	opcodes[0x48] = func(cpu *Cpu) {
+		cpu.setC(highByte(cpu.BC))
+	}
+
+	// LD C,C
+	opcodes[0x49] = func(cpu *Cpu) {
+		cpu.setC(lowByte(cpu.BC))
+	}
+
+	// LD C,D
+	opcodes[0x4a] = func(cpu *Cpu) {
+		cpu.setC(highByte(cpu.DE))
+	}
+
+	// LD C,E
+	opcodes[0x4b] = func(cpu *Cpu) {
+		cpu.setC(lowByte(cpu.DE))
+	}
+
+	// LD C,H
+	opcodes[0x4c] = func(cpu *Cpu) {
+		cpu.setC(highByte(cpu.HL))
+	}
+
+	// LD C,L
+	opcodes[0x4d] = func(cpu *Cpu) {
+		cpu.setC(lowByte(cpu.HL))
+	}
+
+	// LD C,(HL)
+	// Functionally identical to LD C,H (opcode 0x4c)
+	// however it takes 8 clock cycles to execute
+	opcodes[0x4e] = func(cpu *Cpu) {
+		cpu.setC(highByte(cpu.HL))
 	}
 }
