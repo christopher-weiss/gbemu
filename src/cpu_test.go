@@ -135,8 +135,10 @@ func TestLoadLToA(t *testing.T) {
 // Test LD A,(HL) (opcode 0x7e)
 func TestLoadHLToA(t *testing.T) {
 	initOpCodes()
-	cpu := Cpu{AF: 0xffcc, HL: 0xabcd}
-	mem := Memory{}
+	cpu := Cpu{AF: 0xffcc, HL: 0x0012}
+	ram := [20]uint8{0x0012: 0xab}
+	mem := Memory{ram[:]}
+
 	opcodes[0x7e](&cpu, &mem)
 
 	if cpu.AF != 0xabcc {
@@ -219,12 +221,14 @@ func TestLoadLToB(t *testing.T) {
 // Test LD B,(HL) (opcode 0x46)
 func TestLoadHLToB(t *testing.T) {
 	initOpCodes()
-	cpu := Cpu{BC: 0xffcc, HL: 0xaabb}
-	mem := Memory{}
+	cpu := Cpu{BC: 0xffcc, HL: 0x0012}
+	ram := [20]uint8{0x0012: 0xab}
+	mem := Memory{ram[:]}
+
 	opcodes[0x46](&cpu, &mem)
 
-	if cpu.BC != 0xaacc {
-		t.Errorf("Load B,(HL) did not work correctly. Expected 0xAACC but got 0x%X", cpu.BC)
+	if cpu.BC != 0xabcc {
+		t.Errorf("Load B,(HL) did not work correctly. Expected 0xABCC but got 0x%X", cpu.BC)
 	}
 }
 
@@ -303,12 +307,14 @@ func TestLoadLToC(t *testing.T) {
 // Test LD C,(HL) (opcode 0x4e)
 func TestLoadHLToC(t *testing.T) {
 	initOpCodes()
-	cpu := Cpu{BC: 0xffcc, HL: 0xaabb}
-	mem := Memory{}
+	cpu := Cpu{BC: 0xffcc, HL: 0x0012}
+	ram := [20]uint8{0x0012: 0xab}
+	mem := Memory{ram[:]}
+
 	opcodes[0x4e](&cpu, &mem)
 
-	if cpu.BC != 0xffaa {
-		t.Errorf("Load C,(HL) did not work correctly. Expected 0xFFAA but got 0x%X", cpu.BC)
+	if cpu.BC != 0xffab {
+		t.Errorf("Load C,(HL) did not work correctly. Expected 0xFFAB but got 0x%X", cpu.BC)
 	}
 }
 
@@ -387,12 +393,14 @@ func TestLoadLToD(t *testing.T) {
 // Test LD D,(HL) (opcode 0x56)
 func TestLoadHLToD(t *testing.T) {
 	initOpCodes()
-	cpu := Cpu{HL: 0xddff, DE: 0xaabb}
-	mem := Memory{}
+	cpu := Cpu{DE: 0xffcc, HL: 0x0012}
+	ram := [20]uint8{0x0012: 0xab}
+	mem := Memory{ram[:]}
+
 	opcodes[0x56](&cpu, &mem)
 
-	if cpu.DE != 0xddbb {
-		t.Errorf("Load D,(HL) did not work correctly. Expected 0xDDBB but got 0x%X", cpu.DE)
+	if cpu.DE != 0xabcc {
+		t.Errorf("Load D,(HL) did not work correctly. Expected 0xABCC but got 0x%X", cpu.DE)
 	}
 }
 
@@ -471,12 +479,14 @@ func TestLoadLtoE(t *testing.T) {
 // Test LD E,(HL) (opcode 0x5e)
 func TestLoadHLtoE(t *testing.T) {
 	initOpCodes()
-	cpu := Cpu{HL: 0xddff, DE: 0xaabb}
-	mem := Memory{}
+	cpu := Cpu{DE: 0xffcc, HL: 0x0012}
+	ram := [20]uint8{0x0012: 0xab}
+	mem := Memory{ram[:]}
+
 	opcodes[0x5e](&cpu, &mem)
 
-	if cpu.DE != 0xaadd {
-		t.Errorf("Load E,(HL) did not work correctly. Expected 0xAADD but got 0x%X", cpu.DE)
+	if cpu.DE != 0xffab {
+		t.Errorf("Load E,(HL) did not work correctly. Expected 0xFFAB but got 0x%X", cpu.DE)
 	}
 }
 
@@ -555,12 +565,14 @@ func TestLoadLtoH(t *testing.T) {
 // Test LD H,(HL) (opcode 0x66)
 func TestLoadHLtoH(t *testing.T) {
 	initOpCodes()
-	cpu := Cpu{HL: 0xaabb}
-	mem := Memory{}
+	cpu := Cpu{HL: 0x0012}
+	ram := [20]uint8{0x0012: 0xab}
+	mem := Memory{ram[:]}
+
 	opcodes[0x66](&cpu, &mem)
 
-	if cpu.HL != 0xaabb {
-		t.Errorf("Load H,(HL) did not work correctly. Expected 0xAABB but got 0x%X", cpu.HL)
+	if cpu.HL != 0xab12 {
+		t.Errorf("Load H,(HL) did not work correctly. Expected 0xAB12 but got 0x%X", cpu.HL)
 	}
 }
 
@@ -639,100 +651,114 @@ func TestLoadLtoL(t *testing.T) {
 // Test LD L,(HL) (opcode 0x6e)
 func TestLoadHLtoL(t *testing.T) {
 	initOpCodes()
-	cpu := Cpu{HL: 0xaabb}
-	mem := Memory{}
+	cpu := Cpu{HL: 0x0012}
+	ram := [20]uint8{0x0012: 0xab}
+	mem := Memory{ram[:]}
+
 	opcodes[0x6e](&cpu, &mem)
 
-	if cpu.HL != 0xaaaa {
-		t.Errorf("Load L,(HL) did not work correctly. Expected 0xAAAA but got 0x%X", cpu.HL)
+	if cpu.HL != 0x00ab {
+		t.Errorf("Load L,(HL) did not work correctly. Expected 0x00AB but got 0x%X", cpu.HL)
 	}
 }
 
 // Test LD (HL),B (opcode 0x70)
 func TestLoadBToHL(t *testing.T) {
 	initOpCodes()
-	cpu := Cpu{BC: 0xddcc, HL: 0xaabb}
-	mem := Memory{}
+	cpu := Cpu{HL: 0x0012, BC: 0xaabb}
+	ram := [20]uint8{0x0012: 0xab}
+	mem := Memory{ram[:]}
+
 	opcodes[0x70](&cpu, &mem)
 
-	if cpu.HL != 0xddbb {
-		t.Errorf("Load (HL),B did not work correctly. Expected 0xDDBB but got 0x%X", cpu.HL)
+	if mem.ram[0x0012] != 0xaa {
+		t.Errorf("Load (HL),B did not work correctly. Expected 0xAA but got 0x%X", mem.ram[0x0012])
 	}
 }
 
 // Test LD (HL),C (opcode 0x71)
 func TestLoadCtoHL(t *testing.T) {
 	initOpCodes()
-	cpu := Cpu{BC: 0xddcc, HL: 0xaabb}
-	mem := Memory{}
+	cpu := Cpu{HL: 0x0012, BC: 0xaabb}
+	ram := [20]uint8{0x0012: 0xab}
+	mem := Memory{ram[:]}
+
 	opcodes[0x71](&cpu, &mem)
 
-	if cpu.HL != 0xccbb {
-		t.Errorf("Load (HL),C did not work correctly. Expected 0xCCBB but got 0x%X", cpu.HL)
+	if mem.ram[0x0012] != 0xbb {
+		t.Errorf("Load (HL),C did not work correctly. Expected 0xBB but got 0x%X", mem.ram[0x0012])
 	}
 }
 
 // Test LD (HL),D (opcode 0x72)
 func TestLoadDtoHL(t *testing.T) {
 	initOpCodes()
-	cpu := Cpu{HL: 0xaabb, DE: 0xeeff}
-	mem := Memory{}
+	cpu := Cpu{HL: 0x0012, DE: 0xaabb}
+	ram := [20]uint8{0x0012: 0xab}
+	mem := Memory{ram[:]}
+
 	opcodes[0x72](&cpu, &mem)
 
-	if cpu.HL != 0xeebb {
-		t.Errorf("Load (HL),D did not work correctly. Expected 0xEEBB but got 0x%X", cpu.HL)
+	if mem.ram[0x0012] != 0xaa {
+		t.Errorf("Load (HL),D did not work correctly. Expected 0xAA but got 0x%X", mem.ram[0x0012])
 	}
 }
 
 // Test LD (HL),E (opcode 0x73)
 func TestLoadEtoHL(t *testing.T) {
 	initOpCodes()
-	cpu := Cpu{HL: 0xaabb, DE: 0xeeff}
-	mem := Memory{}
+	cpu := Cpu{HL: 0x0012, DE: 0xaabb}
+	ram := [20]uint8{0x0012: 0xab}
+	mem := Memory{ram[:]}
+
 	opcodes[0x73](&cpu, &mem)
 
-	if cpu.HL != 0xffbb {
-		t.Errorf("Load (HL),E did not work correctly. Expected 0xFFBB but got 0x%X", cpu.HL)
+	if mem.ram[0x0012] != 0xbb {
+		t.Errorf("Load (HL),E did not work correctly. Expected 0xBB but got 0x%X", mem.ram[0x0012])
 	}
 }
 
 // Test LD (HL),H (opcode 0x74)
 func TestLoadHtoHL(t *testing.T) {
 	initOpCodes()
-	cpu := Cpu{HL: 0xaabb}
-	mem := Memory{}
+	cpu := Cpu{HL: 0x0012}
+	ram := [20]uint8{0x0012: 0xab}
+	mem := Memory{ram[:]}
+
 	opcodes[0x74](&cpu, &mem)
 
-	if cpu.HL != 0xaabb {
-		t.Errorf("Load (HL),H did not work correctly. Expected 0xAABB but got 0x%X", cpu.HL)
+	if mem.ram[0x0012] != 0x00 {
+		t.Errorf("Load (HL),H did not work correctly. Expected 0x00 but got 0x%X", mem.ram[0x0012])
 	}
 }
 
 // Test LD (HL),L (opcode 0x75)
 func TestLoadLtoHL(t *testing.T) {
 	initOpCodes()
-	cpu := Cpu{HL: 0xaabb}
-	mem := Memory{}
+	cpu := Cpu{HL: 0x0012}
+	ram := [20]uint8{0x0012: 0xab}
+	mem := Memory{ram[:]}
+
 	opcodes[0x75](&cpu, &mem)
 
-	if cpu.HL != 0xbbbb {
-		t.Errorf("Load (HL),L did not work correctly. Expected 0xBBBB but got 0x%X", cpu.HL)
+	if mem.ram[0x0012] != 0x12 {
+		t.Errorf("Load (HL),L did not work correctly. Expected 0x12 but got 0x%X", mem.ram[0x0012])
 	}
 }
 
-// TODO
 // Test LD (HL),n (opcode 0x36)
-/*
-func TestLoadHLtoHL(t *testing.T) {
+func TestLoadValtoHL(t *testing.T) {
 	initOpCodes()
-	cpu := Cpu{HL: 0xaabb}
+	cpu := Cpu{HL: 0x0012}
+	ram := [20]uint8{0x0: 0x36, 0x0001: 0xee, 0x0012: 0xab}
+	mem := Memory{ram[:]}
+
 	opcodes[0x36](&cpu, &mem)
 
-	if cpu.HL != 0xaaaa {
-		t.Errorf("Load (HL),(HL) did not work correctly. Expected 0xAAAA but got 0x%X", cpu.HL)
+	if mem.ram[0x0012] != 0xee {
+		t.Errorf("Load (HL),0xEE did not work correctly. Expected 0xEE but got 0x%X", mem.ram[0x0012])
 	}
 }
-*/
 
 // Test LD B,n
 func TestLoadValToB(t *testing.T) {

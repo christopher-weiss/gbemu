@@ -207,10 +207,10 @@ func initOpCodes() {
 	}
 
 	// LD A,(HL)
-	// Functionally identical to LD A,H (opcode 0x7c)
-	// however it takes 8 clock cycles to execute
+	// (HL) means that the H & L registers are used as single 16-bit memory address, the
+	// contents of which are stored to the A register
 	opcodes[0x7e] = func(cpu *Cpu, mem *Memory) {
-		cpu.setA(highByte(cpu.HL))
+		cpu.setA(mem.Read(cpu.HL))
 	}
 
 	// LD B,B
@@ -244,10 +244,10 @@ func initOpCodes() {
 	}
 
 	// LD B,(HL)
-	// Functionally identical to LD B,H (opcode 0x44)
-	// however it takes 8 clock cycles to execute
+	// (HL) means that the H & L registers are used as single 16-bit memory address, the
+	// contents of which are stored to the B register
 	opcodes[0x46] = func(cpu *Cpu, mem *Memory) {
-		cpu.setB(highByte(cpu.HL))
+		cpu.setB(mem.Read(cpu.HL))
 	}
 
 	// LD C,B
@@ -281,10 +281,10 @@ func initOpCodes() {
 	}
 
 	// LD C,(HL)
-	// Functionally identical to LD C,H (opcode 0x4c)
-	// however it takes 8 clock cycles to execute
+	// (HL) means that the H & L registers are used as single 16-bit memory address, the
+	// contents of which are stored to the C register
 	opcodes[0x4e] = func(cpu *Cpu, mem *Memory) {
-		cpu.setC(highByte(cpu.HL))
+		cpu.setC(mem.Read(cpu.HL))
 	}
 
 	// LD D,B
@@ -318,10 +318,10 @@ func initOpCodes() {
 	}
 
 	// LD D,(HL)
-	// Functionally identical to LD D,H (opcode 0x54)
-	// however it takes 8 clock cycles to execute
+	// (HL) means that the H & L registers are used as single 16-bit memory address, the
+	// contents of which are stored to the D register
 	opcodes[0x56] = func(cpu *Cpu, mem *Memory) {
-		cpu.setD(highByte(cpu.HL))
+		cpu.setD(mem.Read(cpu.HL))
 	}
 
 	// LD E,B
@@ -355,10 +355,10 @@ func initOpCodes() {
 	}
 
 	// LD E,(HL)
-	// Functionally identical to LD E,H (opcode 0x5c)
-	// however it takes 8 clock cycles to execute
+	// (HL) means that the H & L registers are used as single 16-bit memory address, the
+	// contents of which are stored to the E register
 	opcodes[0x5e] = func(cpu *Cpu, mem *Memory) {
-		cpu.setE(highByte(cpu.HL))
+		cpu.setE(mem.Read(cpu.HL))
 	}
 
 	// LD H,B
@@ -392,10 +392,10 @@ func initOpCodes() {
 	}
 
 	// LD H,(HL)
-	// Functionally identical to LD H,H (opcode 0x64)
-	// however it takes 8 clock cycles to execute
+	// (HL) means that the H & L registers are used as single 16-bit memory address, the
+	// contents of which are stored to the H register
 	opcodes[0x66] = func(cpu *Cpu, mem *Memory) {
-		cpu.setH(highByte(cpu.HL))
+		cpu.setH(mem.Read(cpu.HL))
 	}
 
 	// LD L,B
@@ -429,48 +429,60 @@ func initOpCodes() {
 	}
 
 	// LD L,(HL)
-	// Functionally identical to LD L,H (opcode 0x6c)
-	// however it takes 8 clock cycles to execute
+	// (HL) means that the H & L registers are used as single 16-bit memory address, the
+	// contents of which are stored to the L register
 	opcodes[0x6e] = func(cpu *Cpu, mem *Memory) {
-		cpu.setL(highByte(cpu.HL))
+		cpu.setL(mem.Read(cpu.HL))
 	}
 
 	// LD (HL),B
+	// (HL) means that the H & L registers are used as single 16-bit memory address, which is used as
+	// the target address
 	opcodes[0x70] = func(cpu *Cpu, mem *Memory) {
-		cpu.setHL(highByte(cpu.BC))
+		mem.ram[cpu.HL] = highByte(cpu.BC)
 	}
 
 	// LD (HL),C
+	// (HL) means that the H & L registers are used as single 16-bit memory address, which is used as
+	// the target address
 	opcodes[0x71] = func(cpu *Cpu, mem *Memory) {
-		cpu.setHL(lowByte(cpu.BC))
+		mem.ram[cpu.HL] = lowByte(cpu.BC)
 	}
 
 	// LD (HL),D
+	// (HL) means that the H & L registers are used as single 16-bit memory address, which is used as
+	// the target address
 	opcodes[0x72] = func(cpu *Cpu, mem *Memory) {
-		cpu.setHL(highByte(cpu.DE))
+		mem.ram[cpu.HL] = highByte(cpu.DE)
 	}
 
 	// LD (HL),E
+	// (HL) means that the H & L registers are used as single 16-bit memory address, which is used as
+	// the target address
 	opcodes[0x73] = func(cpu *Cpu, mem *Memory) {
-		cpu.setHL(lowByte(cpu.DE))
+		mem.ram[cpu.HL] = lowByte(cpu.DE)
 	}
 
 	// LD (HL),H
+	// (HL) means that the H & L registers are used as single 16-bit memory address, which is used as
+	// the target address
 	opcodes[0x74] = func(cpu *Cpu, mem *Memory) {
-		cpu.setHL(highByte(cpu.HL))
+		mem.ram[cpu.HL] = highByte(cpu.HL)
 	}
 
 	// LD (HL),L
+	// (HL) means that the H & L registers are used as single 16-bit memory address, which is used as
+	// the target address
 	opcodes[0x75] = func(cpu *Cpu, mem *Memory) {
-		cpu.setHL(lowByte(cpu.HL))
+		mem.ram[cpu.HL] = lowByte(cpu.HL)
 	}
 
-	//TODO
 	// LD (HL),n
-	/*
-		opcodes[0x36] = func(cpu *Cpu, mem *Memory) {
-			cpu.setHL(highByte(cpu.HL))
-		}
-	*/
+	// (HL) means that the H & L registers are used as single 16-bit memory address, which is used as
+	// the target address
+	opcodes[0x36] = func(cpu *Cpu, mem *Memory) {
+		cpu.PC++
+		mem.ram[cpu.HL] = mem.Read(cpu.PC)
+	}
 
 }
