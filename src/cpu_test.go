@@ -51,7 +51,8 @@ func TestSetC(t *testing.T) {
 func TestLoadAToA(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{AF: 0xffcc}
-	opcodes[0x7f](&cpu)
+	mem := Memory{}
+	opcodes[0x7f](&cpu, &mem)
 
 	if cpu.AF != 0xffcc {
 		t.Errorf("Load A,A did not work correctly. Expected 0xFFCC, but got 0x%X", cpu.AF)
@@ -62,7 +63,9 @@ func TestLoadAToA(t *testing.T) {
 func TestLoadBToA(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{AF: 0xffcc, BC: 0xab12}
-	opcodes[0x78](&cpu)
+	mem := Memory{}
+
+	opcodes[0x78](&cpu, &mem)
 
 	if cpu.AF != 0xabcc {
 		t.Errorf("Load A,B did not work correctly. Expected 0xABCC, but got 0x%X", cpu.AF)
@@ -73,7 +76,8 @@ func TestLoadBToA(t *testing.T) {
 func TestLoadCToA(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{AF: 0xffcc, BC: 0xab12}
-	opcodes[0x79](&cpu)
+	mem := Memory{}
+	opcodes[0x79](&cpu, &mem)
 
 	if cpu.AF != 0x12cc {
 		t.Errorf("Load A,C did not work correctly. Expected 0x12CC, but got 0x%X", cpu.AF)
@@ -84,7 +88,8 @@ func TestLoadCToA(t *testing.T) {
 func TestLoadDToA(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{AF: 0xffcc, DE: 0xaabb}
-	opcodes[0x7a](&cpu)
+	mem := Memory{}
+	opcodes[0x7a](&cpu, &mem)
 
 	if cpu.AF != 0xaacc {
 		t.Errorf("Load A,D did not work correctly. Expected 0xAACC, but got 0x%X", cpu.AF)
@@ -95,7 +100,8 @@ func TestLoadDToA(t *testing.T) {
 func TestLoadEToA(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{AF: 0xffcc, DE: 0xaabb}
-	opcodes[0x7b](&cpu)
+	mem := Memory{}
+	opcodes[0x7b](&cpu, &mem)
 
 	if cpu.AF != 0xbbcc {
 		t.Errorf("Load A,E did not work correctly. Expected 0xBBCC, but got 0x%X", cpu.AF)
@@ -106,7 +112,8 @@ func TestLoadEToA(t *testing.T) {
 func TestLoadHToA(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{AF: 0xffcc, HL: 0xabcd}
-	opcodes[0x7c](&cpu)
+	mem := Memory{}
+	opcodes[0x7c](&cpu, &mem)
 
 	if cpu.AF != 0xabcc {
 		t.Errorf("Load A,H did not work correctly. Expected 0xABCC, but got 0x%X", cpu.AF)
@@ -117,7 +124,8 @@ func TestLoadHToA(t *testing.T) {
 func TestLoadLToA(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{AF: 0xffcc, HL: 0xabcd}
-	opcodes[0x7d](&cpu)
+	mem := Memory{}
+	opcodes[0x7d](&cpu, &mem)
 
 	if cpu.AF != 0xcdcc {
 		t.Errorf("Load A,L did not work correctly. Expected 0xCDCC, but got 0x%X", cpu.AF)
@@ -128,7 +136,8 @@ func TestLoadLToA(t *testing.T) {
 func TestLoadHLToA(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{AF: 0xffcc, HL: 0xabcd}
-	opcodes[0x7e](&cpu)
+	mem := Memory{}
+	opcodes[0x7e](&cpu, &mem)
 
 	if cpu.AF != 0xabcc {
 		t.Errorf("Load A,(HL) did not work correctly. Expected 0xABCC but got 0x%X", cpu.AF)
@@ -139,7 +148,8 @@ func TestLoadHLToA(t *testing.T) {
 func TestLoadBToB(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{BC: 0xffcc}
-	opcodes[0x40](&cpu)
+	mem := Memory{}
+	opcodes[0x40](&cpu, &mem)
 
 	if cpu.BC != 0xffcc {
 		t.Errorf("Load B,B did not work correctly. Expected 0xFFCC but got 0x%X", cpu.BC)
@@ -150,7 +160,8 @@ func TestLoadBToB(t *testing.T) {
 func TestLoadCToB(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{BC: 0xffcc}
-	opcodes[0x41](&cpu)
+	mem := Memory{}
+	opcodes[0x41](&cpu, &mem)
 
 	if cpu.BC != 0xcccc {
 		t.Errorf("Load B,C did not work correctly. Expected 0xCCCC but got 0x%X", cpu.BC)
@@ -161,7 +172,8 @@ func TestLoadCToB(t *testing.T) {
 func TestLoadDToB(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{BC: 0xffcc, DE: 0xbb88}
-	opcodes[0x42](&cpu)
+	mem := Memory{}
+	opcodes[0x42](&cpu, &mem)
 
 	if cpu.BC != 0xbbcc {
 		t.Errorf("Load B,D did not work correctly. Expected 0xBBCC but got 0x%X", cpu.BC)
@@ -172,7 +184,8 @@ func TestLoadDToB(t *testing.T) {
 func TestLoadEToB(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{BC: 0xffcc, DE: 0xbb88}
-	opcodes[0x43](&cpu)
+	mem := Memory{}
+	opcodes[0x43](&cpu, &mem)
 
 	if cpu.BC != 0x88cc {
 		t.Errorf("Load B,E did not work correctly. Expected 0x88CC but got 0x%X", cpu.BC)
@@ -183,7 +196,8 @@ func TestLoadEToB(t *testing.T) {
 func TestLoadHToB(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{BC: 0xffcc, HL: 0xaabb}
-	opcodes[0x44](&cpu)
+	mem := Memory{}
+	opcodes[0x44](&cpu, &mem)
 
 	if cpu.BC != 0xaacc {
 		t.Errorf("Load B,H did not work correctly. Expected 0xAACC but got 0x%X", cpu.BC)
@@ -194,7 +208,8 @@ func TestLoadHToB(t *testing.T) {
 func TestLoadLToB(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{BC: 0xffcc, HL: 0xaabb}
-	opcodes[0x45](&cpu)
+	mem := Memory{}
+	opcodes[0x45](&cpu, &mem)
 
 	if cpu.BC != 0xbbcc {
 		t.Errorf("Load B,L did not work correctly. Expected 0xBBCC but got 0x%X", cpu.BC)
@@ -205,7 +220,8 @@ func TestLoadLToB(t *testing.T) {
 func TestLoadHLToB(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{BC: 0xffcc, HL: 0xaabb}
-	opcodes[0x46](&cpu)
+	mem := Memory{}
+	opcodes[0x46](&cpu, &mem)
 
 	if cpu.BC != 0xaacc {
 		t.Errorf("Load B,(HL) did not work correctly. Expected 0xAACC but got 0x%X", cpu.BC)
@@ -216,7 +232,8 @@ func TestLoadHLToB(t *testing.T) {
 func TestLoadBToC(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{BC: 0xffcc}
-	opcodes[0x48](&cpu)
+	mem := Memory{}
+	opcodes[0x48](&cpu, &mem)
 
 	if cpu.BC != 0xffff {
 		t.Errorf("Load C,B did not work correctly. Expected 0xFFFF but got 0x%X", cpu.BC)
@@ -227,7 +244,8 @@ func TestLoadBToC(t *testing.T) {
 func TestLoadCToC(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{BC: 0xffcc}
-	opcodes[0x49](&cpu)
+	mem := Memory{}
+	opcodes[0x49](&cpu, &mem)
 
 	if cpu.BC != 0xffcc {
 		t.Errorf("Load C,C did not work correctly. Expected 0xFFFF but got 0x%X", cpu.BC)
@@ -238,7 +256,8 @@ func TestLoadCToC(t *testing.T) {
 func TestLoadDToC(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{BC: 0xffcc, DE: 0xaabb}
-	opcodes[0x4a](&cpu)
+	mem := Memory{}
+	opcodes[0x4a](&cpu, &mem)
 
 	if cpu.BC != 0xffaa {
 		t.Errorf("Load C,D did not work correctly. Expected 0xFFAA but got 0x%X", cpu.BC)
@@ -249,7 +268,8 @@ func TestLoadDToC(t *testing.T) {
 func TestLoadEToC(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{BC: 0xffcc, DE: 0xaabb}
-	opcodes[0x4b](&cpu)
+	mem := Memory{}
+	opcodes[0x4b](&cpu, &mem)
 
 	if cpu.BC != 0xffbb {
 		t.Errorf("Load C,E did not work correctly. Expected 0xFFBB but got 0x%X", cpu.BC)
@@ -260,7 +280,8 @@ func TestLoadEToC(t *testing.T) {
 func TestLoadHToC(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{BC: 0xffcc, HL: 0xaabb}
-	opcodes[0x4c](&cpu)
+	mem := Memory{}
+	opcodes[0x4c](&cpu, &mem)
 
 	if cpu.BC != 0xffaa {
 		t.Errorf("Load C,H did not work correctly. Expected 0xFFAA but got 0x%X", cpu.BC)
@@ -271,7 +292,8 @@ func TestLoadHToC(t *testing.T) {
 func TestLoadLToC(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{BC: 0xffcc, HL: 0xaabb}
-	opcodes[0x4d](&cpu)
+	mem := Memory{}
+	opcodes[0x4d](&cpu, &mem)
 
 	if cpu.BC != 0xffbb {
 		t.Errorf("Load C,L did not work correctly. Expected 0xFFBB but got 0x%X", cpu.BC)
@@ -282,7 +304,8 @@ func TestLoadLToC(t *testing.T) {
 func TestLoadHLToC(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{BC: 0xffcc, HL: 0xaabb}
-	opcodes[0x4e](&cpu)
+	mem := Memory{}
+	opcodes[0x4e](&cpu, &mem)
 
 	if cpu.BC != 0xffaa {
 		t.Errorf("Load C,(HL) did not work correctly. Expected 0xFFAA but got 0x%X", cpu.BC)
@@ -293,7 +316,8 @@ func TestLoadHLToC(t *testing.T) {
 func TestLoadBToD(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{BC: 0xddcc, DE: 0xaabb}
-	opcodes[0x50](&cpu)
+	mem := Memory{}
+	opcodes[0x50](&cpu, &mem)
 
 	if cpu.DE != 0xddbb {
 		t.Errorf("Load D,B did not work correctly. Expected 0xDDBB but got 0x%X", cpu.DE)
@@ -304,7 +328,8 @@ func TestLoadBToD(t *testing.T) {
 func TestLoadCToD(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{BC: 0xddcc, DE: 0xaabb}
-	opcodes[0x51](&cpu)
+	mem := Memory{}
+	opcodes[0x51](&cpu, &mem)
 
 	if cpu.DE != 0xccbb {
 		t.Errorf("Load D,C did not work correctly. Expected 0xCCBB but got 0x%X", cpu.DE)
@@ -315,7 +340,8 @@ func TestLoadCToD(t *testing.T) {
 func TestLoadDToD(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{DE: 0xaabb}
-	opcodes[0x52](&cpu)
+	mem := Memory{}
+	opcodes[0x52](&cpu, &mem)
 
 	if cpu.DE != 0xaabb {
 		t.Errorf("Load D,D did not work correctly. Expected 0xAABB but got 0x%X", cpu.DE)
@@ -326,7 +352,8 @@ func TestLoadDToD(t *testing.T) {
 func TestLoadEToD(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{DE: 0xaabb}
-	opcodes[0x53](&cpu)
+	mem := Memory{}
+	opcodes[0x53](&cpu, &mem)
 
 	if cpu.DE != 0xbbbb {
 		t.Errorf("Load D,E did not work correctly. Expected 0xBBBB but got 0x%X", cpu.DE)
@@ -337,7 +364,8 @@ func TestLoadEToD(t *testing.T) {
 func TestLoadHToD(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{HL: 0xddff, DE: 0xaabb}
-	opcodes[0x54](&cpu)
+	mem := Memory{}
+	opcodes[0x54](&cpu, &mem)
 
 	if cpu.DE != 0xddbb {
 		t.Errorf("Load D,H did not work correctly. Expected 0xDDBB but got 0x%X", cpu.DE)
@@ -348,7 +376,8 @@ func TestLoadHToD(t *testing.T) {
 func TestLoadLToD(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{HL: 0xddff, DE: 0xaabb}
-	opcodes[0x55](&cpu)
+	mem := Memory{}
+	opcodes[0x55](&cpu, &mem)
 
 	if cpu.DE != 0xffbb {
 		t.Errorf("Load D,L did not work correctly. Expected 0xFFBB but got 0x%X", cpu.DE)
@@ -359,7 +388,8 @@ func TestLoadLToD(t *testing.T) {
 func TestLoadHLToD(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{HL: 0xddff, DE: 0xaabb}
-	opcodes[0x56](&cpu)
+	mem := Memory{}
+	opcodes[0x56](&cpu, &mem)
 
 	if cpu.DE != 0xddbb {
 		t.Errorf("Load D,(HL) did not work correctly. Expected 0xDDBB but got 0x%X", cpu.DE)
@@ -370,7 +400,8 @@ func TestLoadHLToD(t *testing.T) {
 func TestLoadBToE(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{BC: 0xddcc, DE: 0xaabb}
-	opcodes[0x58](&cpu)
+	mem := Memory{}
+	opcodes[0x58](&cpu, &mem)
 
 	if cpu.DE != 0xaadd {
 		t.Errorf("Load D,E did not work correctly. Expected 0xAADD but got 0x%X", cpu.DE)
@@ -381,7 +412,8 @@ func TestLoadBToE(t *testing.T) {
 func TestLoadCtoE(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{BC: 0xddcc, DE: 0xaabb}
-	opcodes[0x59](&cpu)
+	mem := Memory{}
+	opcodes[0x59](&cpu, &mem)
 
 	if cpu.DE != 0xaacc {
 		t.Errorf("Load E,C did not work correctly. Expected 0xAACC but got 0x%X", cpu.DE)
@@ -392,7 +424,8 @@ func TestLoadCtoE(t *testing.T) {
 func TestLoadDtoE(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{DE: 0xaabb}
-	opcodes[0x5a](&cpu)
+	mem := Memory{}
+	opcodes[0x5a](&cpu, &mem)
 
 	if cpu.DE != 0xaaaa {
 		t.Errorf("Load E,D did not work correctly. Expected 0xAAAA but got 0x%X", cpu.DE)
@@ -403,7 +436,8 @@ func TestLoadDtoE(t *testing.T) {
 func TestLoadEtoE(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{DE: 0xaabb}
-	opcodes[0x5b](&cpu)
+	mem := Memory{}
+	opcodes[0x5b](&cpu, &mem)
 
 	if cpu.DE != 0xaabb {
 		t.Errorf("Load E,E did not work correctly. Expected 0xAABB but got 0x%X", cpu.DE)
@@ -414,7 +448,8 @@ func TestLoadEtoE(t *testing.T) {
 func TestLoadHtoE(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{HL: 0xddff, DE: 0xaabb}
-	opcodes[0x5c](&cpu)
+	mem := Memory{}
+	opcodes[0x5c](&cpu, &mem)
 
 	if cpu.DE != 0xaadd {
 		t.Errorf("Load E,H did not work correctly. Expected 0xAADD but got 0x%X", cpu.DE)
@@ -425,7 +460,8 @@ func TestLoadHtoE(t *testing.T) {
 func TestLoadLtoE(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{HL: 0xddff, DE: 0xaabb}
-	opcodes[0x5d](&cpu)
+	mem := Memory{}
+	opcodes[0x5d](&cpu, &mem)
 
 	if cpu.DE != 0xaaff {
 		t.Errorf("Load E,L did not work correctly. Expected 0xAAFF but got 0x%X", cpu.DE)
@@ -436,7 +472,8 @@ func TestLoadLtoE(t *testing.T) {
 func TestLoadHLtoE(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{HL: 0xddff, DE: 0xaabb}
-	opcodes[0x5e](&cpu)
+	mem := Memory{}
+	opcodes[0x5e](&cpu, &mem)
 
 	if cpu.DE != 0xaadd {
 		t.Errorf("Load E,(HL) did not work correctly. Expected 0xAADD but got 0x%X", cpu.DE)
@@ -447,7 +484,8 @@ func TestLoadHLtoE(t *testing.T) {
 func TestLoadBToH(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{BC: 0xddcc, HL: 0xaabb}
-	opcodes[0x60](&cpu)
+	mem := Memory{}
+	opcodes[0x60](&cpu, &mem)
 
 	if cpu.HL != 0xddbb {
 		t.Errorf("Load H,B did not work correctly. Expected 0xDDBB but got 0x%X", cpu.HL)
@@ -458,7 +496,8 @@ func TestLoadBToH(t *testing.T) {
 func TestLoadCtoH(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{BC: 0xddcc, HL: 0xaabb}
-	opcodes[0x61](&cpu)
+	mem := Memory{}
+	opcodes[0x61](&cpu, &mem)
 
 	if cpu.HL != 0xccbb {
 		t.Errorf("Load H,C did not work correctly. Expected 0xCCBB but got 0x%X", cpu.HL)
@@ -469,7 +508,8 @@ func TestLoadCtoH(t *testing.T) {
 func TestLoadDtoH(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{HL: 0xaabb, DE: 0xeeff}
-	opcodes[0x62](&cpu)
+	mem := Memory{}
+	opcodes[0x62](&cpu, &mem)
 
 	if cpu.HL != 0xeebb {
 		t.Errorf("Load H,D did not work correctly. Expected 0xEEDD but got 0x%X", cpu.HL)
@@ -480,7 +520,8 @@ func TestLoadDtoH(t *testing.T) {
 func TestLoadEtoH(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{HL: 0xaabb, DE: 0xeeff}
-	opcodes[0x63](&cpu)
+	mem := Memory{}
+	opcodes[0x63](&cpu, &mem)
 
 	if cpu.HL != 0xffbb {
 		t.Errorf("Load H,E did not work correctly. Expected 0xFFBB but got 0x%X", cpu.HL)
@@ -491,7 +532,8 @@ func TestLoadEtoH(t *testing.T) {
 func TestLoadHtoH(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{HL: 0xaabb}
-	opcodes[0x64](&cpu)
+	mem := Memory{}
+	opcodes[0x64](&cpu, &mem)
 
 	if cpu.HL != 0xaabb {
 		t.Errorf("Load H,H did not work correctly. Expected 0xAAbb but got 0x%X", cpu.HL)
@@ -502,7 +544,8 @@ func TestLoadHtoH(t *testing.T) {
 func TestLoadLtoH(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{HL: 0xaabb}
-	opcodes[0x65](&cpu)
+	mem := Memory{}
+	opcodes[0x65](&cpu, &mem)
 
 	if cpu.HL != 0xbbbb {
 		t.Errorf("Load H,L did not work correctly. Expected 0xBBBB but got 0x%X", cpu.HL)
@@ -513,7 +556,8 @@ func TestLoadLtoH(t *testing.T) {
 func TestLoadHLtoH(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{HL: 0xaabb}
-	opcodes[0x66](&cpu)
+	mem := Memory{}
+	opcodes[0x66](&cpu, &mem)
 
 	if cpu.HL != 0xaabb {
 		t.Errorf("Load H,(HL) did not work correctly. Expected 0xAABB but got 0x%X", cpu.HL)
@@ -524,7 +568,8 @@ func TestLoadHLtoH(t *testing.T) {
 func TestLoadBToL(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{BC: 0xddcc, HL: 0xaabb}
-	opcodes[0x68](&cpu)
+	mem := Memory{}
+	opcodes[0x68](&cpu, &mem)
 
 	if cpu.HL != 0xaadd {
 		t.Errorf("Load L,B did not work correctly. Expected 0xAADD but got 0x%X", cpu.HL)
@@ -535,7 +580,8 @@ func TestLoadBToL(t *testing.T) {
 func TestLoadCtoL(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{BC: 0xddcc, HL: 0xaabb}
-	opcodes[0x69](&cpu)
+	mem := Memory{}
+	opcodes[0x69](&cpu, &mem)
 
 	if cpu.HL != 0xaacc {
 		t.Errorf("Load L,C did not work correctly. Expected 0xAACC but got 0x%X", cpu.HL)
@@ -546,7 +592,8 @@ func TestLoadCtoL(t *testing.T) {
 func TestLoadDtoL(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{HL: 0xaabb, DE: 0xeeff}
-	opcodes[0x6a](&cpu)
+	mem := Memory{}
+	opcodes[0x6a](&cpu, &mem)
 
 	if cpu.HL != 0xaaee {
 		t.Errorf("Load L,D did not work correctly. Expected 0xAAEE but got 0x%X", cpu.HL)
@@ -557,7 +604,8 @@ func TestLoadDtoL(t *testing.T) {
 func TestLoadEtoL(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{HL: 0xaabb, DE: 0xeeff}
-	opcodes[0x6b](&cpu)
+	mem := Memory{}
+	opcodes[0x6b](&cpu, &mem)
 
 	if cpu.HL != 0xaaff {
 		t.Errorf("Load L,E did not work correctly. Expected 0xAAFF but got 0x%X", cpu.HL)
@@ -568,7 +616,8 @@ func TestLoadEtoL(t *testing.T) {
 func TestLoadHtoL(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{HL: 0xaabb}
-	opcodes[0x6c](&cpu)
+	mem := Memory{}
+	opcodes[0x6c](&cpu, &mem)
 
 	if cpu.HL != 0xaaaa {
 		t.Errorf("Load L,H did not work correctly. Expected 0xAAAA but got 0x%X", cpu.HL)
@@ -579,7 +628,8 @@ func TestLoadHtoL(t *testing.T) {
 func TestLoadLtoL(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{HL: 0xaabb}
-	opcodes[0x6d](&cpu)
+	mem := Memory{}
+	opcodes[0x6d](&cpu, &mem)
 
 	if cpu.HL != 0xaabb {
 		t.Errorf("Load L,L did not work correctly. Expected 0xAABB but got 0x%X", cpu.HL)
@@ -590,7 +640,8 @@ func TestLoadLtoL(t *testing.T) {
 func TestLoadHLtoL(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{HL: 0xaabb}
-	opcodes[0x6e](&cpu)
+	mem := Memory{}
+	opcodes[0x6e](&cpu, &mem)
 
 	if cpu.HL != 0xaaaa {
 		t.Errorf("Load L,(HL) did not work correctly. Expected 0xAAAA but got 0x%X", cpu.HL)
@@ -601,7 +652,8 @@ func TestLoadHLtoL(t *testing.T) {
 func TestLoadBToHL(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{BC: 0xddcc, HL: 0xaabb}
-	opcodes[0x70](&cpu)
+	mem := Memory{}
+	opcodes[0x70](&cpu, &mem)
 
 	if cpu.HL != 0xddbb {
 		t.Errorf("Load (HL),B did not work correctly. Expected 0xDDBB but got 0x%X", cpu.HL)
@@ -612,7 +664,8 @@ func TestLoadBToHL(t *testing.T) {
 func TestLoadCtoHL(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{BC: 0xddcc, HL: 0xaabb}
-	opcodes[0x71](&cpu)
+	mem := Memory{}
+	opcodes[0x71](&cpu, &mem)
 
 	if cpu.HL != 0xccbb {
 		t.Errorf("Load (HL),C did not work correctly. Expected 0xCCBB but got 0x%X", cpu.HL)
@@ -623,7 +676,8 @@ func TestLoadCtoHL(t *testing.T) {
 func TestLoadDtoHL(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{HL: 0xaabb, DE: 0xeeff}
-	opcodes[0x72](&cpu)
+	mem := Memory{}
+	opcodes[0x72](&cpu, &mem)
 
 	if cpu.HL != 0xeebb {
 		t.Errorf("Load (HL),D did not work correctly. Expected 0xEEBB but got 0x%X", cpu.HL)
@@ -634,7 +688,8 @@ func TestLoadDtoHL(t *testing.T) {
 func TestLoadEtoHL(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{HL: 0xaabb, DE: 0xeeff}
-	opcodes[0x73](&cpu)
+	mem := Memory{}
+	opcodes[0x73](&cpu, &mem)
 
 	if cpu.HL != 0xffbb {
 		t.Errorf("Load (HL),E did not work correctly. Expected 0xFFBB but got 0x%X", cpu.HL)
@@ -645,7 +700,8 @@ func TestLoadEtoHL(t *testing.T) {
 func TestLoadHtoHL(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{HL: 0xaabb}
-	opcodes[0x74](&cpu)
+	mem := Memory{}
+	opcodes[0x74](&cpu, &mem)
 
 	if cpu.HL != 0xaabb {
 		t.Errorf("Load (HL),H did not work correctly. Expected 0xAABB but got 0x%X", cpu.HL)
@@ -656,7 +712,8 @@ func TestLoadHtoHL(t *testing.T) {
 func TestLoadLtoHL(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{HL: 0xaabb}
-	opcodes[0x75](&cpu)
+	mem := Memory{}
+	opcodes[0x75](&cpu, &mem)
 
 	if cpu.HL != 0xbbbb {
 		t.Errorf("Load (HL),L did not work correctly. Expected 0xBBBB but got 0x%X", cpu.HL)
@@ -669,10 +726,76 @@ func TestLoadLtoHL(t *testing.T) {
 func TestLoadHLtoHL(t *testing.T) {
 	initOpCodes()
 	cpu := Cpu{HL: 0xaabb}
-	opcodes[0x36](&cpu)
+	opcodes[0x36](&cpu, &mem)
 
 	if cpu.HL != 0xaaaa {
 		t.Errorf("Load (HL),(HL) did not work correctly. Expected 0xAAAA but got 0x%X", cpu.HL)
 	}
 }
 */
+
+// Test LD B,n
+func TestLoadValToB(t *testing.T) {
+	cpu := Cpu{BC: 0xaabb, PC: 0x0000}
+	mem := Memory{ram: []uint8{0x06, 0x1a}}
+	opcodes[0x06](&cpu, &mem)
+
+	if cpu.BC != 0x1abb {
+		t.Errorf("Load B,0x1a did not work correctly. Expected 0x1abb but got 0x%X", cpu.BC)
+	}
+}
+
+// Test LD C,n
+func TestLoadValToC(t *testing.T) {
+	cpu := Cpu{BC: 0xaabb, PC: 0x0000}
+	mem := Memory{ram: []uint8{0x0e, 0x1a}}
+	opcodes[0x0e](&cpu, &mem)
+
+	if cpu.BC != 0xaa1a {
+		t.Errorf("Load C,0x1a did not work correctly. Expected 0xaa1a but got 0x%X", cpu.BC)
+	}
+}
+
+// Test LD D,n
+func TestLoadValToD(t *testing.T) {
+	cpu := Cpu{DE: 0xaabb, PC: 0x0000}
+	mem := Memory{ram: []uint8{0x16, 0x1a}}
+	opcodes[0x16](&cpu, &mem)
+
+	if cpu.DE != 0x1abb {
+		t.Errorf("Load D,0x1a did not work correctly. Expected 0x1abb but got 0x%X", cpu.DE)
+	}
+}
+
+// Test LD E,n
+func TestLoadValToE(t *testing.T) {
+	cpu := Cpu{DE: 0xaabb, PC: 0x0000}
+	mem := Memory{ram: []uint8{0x1e, 0x1a}}
+	opcodes[0x1e](&cpu, &mem)
+
+	if cpu.DE != 0xaa1a {
+		t.Errorf("Load E,0x1a did not work correctly. Expected 0xaa1a but got 0x%X", cpu.DE)
+	}
+}
+
+// Test LD H,n
+func TestLoadValToH(t *testing.T) {
+	cpu := Cpu{HL: 0xaabb, PC: 0x0000}
+	mem := Memory{ram: []uint8{0x26, 0x1a}}
+	opcodes[0x26](&cpu, &mem)
+
+	if cpu.HL != 0x1abb {
+		t.Errorf("Load H,0x1a did not work correctly. Expected 0x1abb but got 0x%X", cpu.HL)
+	}
+}
+
+// Test LD L,n
+func TestLoadValToL(t *testing.T) {
+	cpu := Cpu{HL: 0xaabb, PC: 0x0000}
+	mem := Memory{ram: []uint8{0x2e, 0x1a}}
+	opcodes[0x2e](&cpu, &mem)
+
+	if cpu.HL != 0xaa1a {
+		t.Errorf("Load L,0x1a did not work correctly. Expected 0xaa1a but got 0x%X", cpu.HL)
+	}
+}
