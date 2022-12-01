@@ -47,6 +47,33 @@ func TestSetC(t *testing.T) {
 	}
 }
 
+func TestSetD(t *testing.T) {
+	cpu := Cpu{DE: 0xffcc}
+	cpu.setD(0xaa)
+
+	if cpu.DE != 0xaacc {
+		t.Errorf("Did not set D-register correctly. Expected 0xAACC, but got 0x%X", cpu.DE)
+	}
+}
+
+func TestSetE(t *testing.T) {
+	cpu := Cpu{DE: 0xffcc}
+	cpu.setE(0xaa)
+
+	if cpu.DE != 0xffaa {
+		t.Errorf("Did not set E-register correctly. Expected 0xFFAA, but got 0x%X", cpu.DE)
+	}
+}
+
+func TestSetF(t *testing.T) {
+	cpu := Cpu{AF: 0xffcc}
+	cpu.setF(0xaa)
+
+	if cpu.AF != 0xffaa {
+		t.Errorf("Did not set F-register correctly. Expected 0xFFAA, but got 0x%X", cpu.AF)
+	}
+}
+
 // Test LD A,A (opcode 0x7f)
 func TestLoadAToA(t *testing.T) {
 	initOpCodes()
@@ -129,6 +156,34 @@ func TestLoadLToA(t *testing.T) {
 
 	if cpu.AF != 0xcdcc {
 		t.Errorf("Load A,L did not work correctly. Expected 0xCDCC, but got 0x%X", cpu.AF)
+	}
+}
+
+// Test LD A,(BC) (opcode 0x0a)
+func TestLoadBCToA(t *testing.T) {
+	initOpCodes()
+	cpu := Cpu{AF: 0xffcc, BC: 0x0012}
+	ram := [20]uint8{0x0012: 0xab}
+	mem := Memory{ram[:]}
+
+	opcodes[0x0a](&cpu, &mem)
+
+	if cpu.AF != 0xabcc {
+		t.Errorf("Load A,(BC) did not work correctly. Expected 0xABCC but got 0x%X", cpu.AF)
+	}
+}
+
+// Test LD A,(DE) (opcode 0x1a)
+func TestLoadDEToA(t *testing.T) {
+	initOpCodes()
+	cpu := Cpu{AF: 0xffcc, DE: 0x0012}
+	ram := [20]uint8{0x0012: 0xab}
+	mem := Memory{ram[:]}
+
+	opcodes[0x1a](&cpu, &mem)
+
+	if cpu.AF != 0xabcc {
+		t.Errorf("Load A,(DE) did not work correctly. Expected 0xABCC but got 0x%X", cpu.AF)
 	}
 }
 
@@ -762,6 +817,7 @@ func TestLoadValtoHL(t *testing.T) {
 
 // Test LD B,n
 func TestLoadValToB(t *testing.T) {
+	initOpCodes()
 	cpu := Cpu{BC: 0xaabb, PC: 0x0000}
 	mem := Memory{ram: []uint8{0x06, 0x1a}}
 	opcodes[0x06](&cpu, &mem)
@@ -784,6 +840,7 @@ func TestLoadValToC(t *testing.T) {
 
 // Test LD D,n
 func TestLoadValToD(t *testing.T) {
+	initOpCodes()
 	cpu := Cpu{DE: 0xaabb, PC: 0x0000}
 	mem := Memory{ram: []uint8{0x16, 0x1a}}
 	opcodes[0x16](&cpu, &mem)
@@ -795,6 +852,7 @@ func TestLoadValToD(t *testing.T) {
 
 // Test LD E,n
 func TestLoadValToE(t *testing.T) {
+	initOpCodes()
 	cpu := Cpu{DE: 0xaabb, PC: 0x0000}
 	mem := Memory{ram: []uint8{0x1e, 0x1a}}
 	opcodes[0x1e](&cpu, &mem)
@@ -806,6 +864,7 @@ func TestLoadValToE(t *testing.T) {
 
 // Test LD H,n
 func TestLoadValToH(t *testing.T) {
+	initOpCodes()
 	cpu := Cpu{HL: 0xaabb, PC: 0x0000}
 	mem := Memory{ram: []uint8{0x26, 0x1a}}
 	opcodes[0x26](&cpu, &mem)
@@ -817,11 +876,65 @@ func TestLoadValToH(t *testing.T) {
 
 // Test LD L,n
 func TestLoadValToL(t *testing.T) {
+	initOpCodes()
 	cpu := Cpu{HL: 0xaabb, PC: 0x0000}
 	mem := Memory{ram: []uint8{0x2e, 0x1a}}
 	opcodes[0x2e](&cpu, &mem)
 
 	if cpu.HL != 0xaa1a {
 		t.Errorf("Load L,0x1a did not work correctly. Expected 0xaa1a but got 0x%X", cpu.HL)
+	}
+}
+
+// Test LD A,(nn)
+func TestLoadValAt16bitAddressToA(t *testing.T) {
+	initOpCodes()
+	cpu := Cpu{BC: 0xffcc, HL: 0x0012, PC: 0x0009}
+	ram := [20]uint8{0x0009: 0xab, 0x000a: 0x00, 0x000b: 0x10, 0x0010: 0xe3}
+	mem := Memory{ram[:]}
+	opcodes[0xfa](&cpu, &mem)
+
+	if highByte(cpu.AF) != 0xe3 {
+		t.Errorf("Load L,(nn) did not work correctly. Expected 0xe3 but got 0x%X", highByte(cpu.AF))
+	}
+}
+
+// Test LD A,(n)
+func TestLoadValAt8bitAddressToA(t *testing.T) {
+	initOpCodes()
+	cpu := Cpu{BC: 0xffcc, HL: 0x0012, PC: 0x0009}
+	ram := [20]uint8{0x0009: 0xab, 0x000a: 0xe3, 0x000b: 0x10, 0x0010: 0xe3}
+	mem := Memory{ram[:]}
+	opcodes[0xf0](&cpu, &mem)
+
+	if highByte(cpu.AF) != 0xe3 {
+		t.Errorf("Load L,(n) did not work correctly. Expected 0xe3 but got 0x%X", highByte(cpu.AF))
+	}
+}
+
+// Test LD A,(#)
+func TestLoadImmedateToA(t *testing.T) {
+	initOpCodes()
+	cpu := Cpu{BC: 0xffcc, HL: 0x0012, PC: 0x0009}
+	ram := [20]uint8{0x0009: 0xab, 0x000a: 0xfe}
+	mem := Memory{ram[:]}
+	opcodes[0x3e](&cpu, &mem)
+
+	if highByte(cpu.AF) != 0xfe {
+		t.Errorf("Load L,(0x001f) did not work correctly. Expected 0xfe but got 0x%X", cpu.AF)
+	}
+}
+
+// Test LD A,(C)
+func TestLoadValAtCToA(t *testing.T) {
+	initOpCodes()
+	cpu := Cpu{AF: 0xffcc, BC: 0x0004}
+	ram := [65285]uint8{0xff04: 0xfa}
+	mem := Memory{ram[:]}
+
+	opcodes[0xf2](&cpu, &mem)
+
+	if highByte(cpu.AF) != 0xfa {
+		t.Errorf("Load L,(C) did not work correctly. Expected 0x12 but got 0x%X", highByte(cpu.AF))
 	}
 }
