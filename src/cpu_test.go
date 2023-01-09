@@ -938,3 +938,22 @@ func TestLoadValAtCToA(t *testing.T) {
 		t.Errorf("Load L,(C) did not work correctly. Expected 0x12 but got 0x%X", highByte(cpu.AF))
 	}
 }
+
+// LDHL SP,e
+func TestLhdl(t *testing.T) {
+	initOpCodes()
+	cpu := Cpu{AF: 0xffcc, BC: 0x0004, SP: 0x0102, PC: 0x0000}
+	ram := [65285]uint8{0x0000: 0xf8, 0x0001: 0x03, 0x0002: 0x05}
+	mem := Memory{ram[:]}
+
+	opcodes[0xf8](&cpu, &mem)
+
+	if cpu.HL != 0x0105 {
+		t.Errorf("LDHL SP,e did not work correctly. Expected 0x0105 but got 0x%X", cpu.HL)
+	}
+
+	if lowByte(cpu.AF) != 0x0 {
+		t.Errorf("LDHL SP,e did not work correctly. Expected F-register to be 0x00 but got 0x%X", lowByte(cpu.AF))
+	}
+
+}

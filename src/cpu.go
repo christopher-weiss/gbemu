@@ -598,8 +598,14 @@ func initOpCodes() {
 
 	// LDHL SP,e
 	opcodes[0xf8] = func(cpu *Cpu, mem *Memory) {
-		cpu.HL = uint16(int16(cpu.SP) + int16(readN(cpu, mem)))
-		cpu.setF(0) //TODO H and C flags probably not set correctly here
+		n := readN(cpu, mem)
+		add32 := int32(cpu.SP) + int32(n)
+		cpu.HL = uint16(int16(cpu.SP) + int16(n))
+		cFlag := uint8((add32 & 0x10000) >> 12) // mask 17th bit (overflow) and shift 16 to the right and 4 to the left
+		hFlag := uint8((add32 & 0x100) >> 3)    // mask 9th bit (half-carry overflow) and shift 8 to the right and 5 to the left
+		nFlag := uint8(0)                       // reset to 0
+		zFlag := uint8(0)                       // reset to 0
+		cpu.setF(cFlag | hFlag | nFlag | zFlag)
 	}
 
 	// LD (nn),A
